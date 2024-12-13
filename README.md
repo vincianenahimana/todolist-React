@@ -55,3 +55,7 @@ A live counter at the bottom updates in real-time to show the number of tasks le
 ## 6.  Deployement
 
 The TodoList app is deployed on GitHub Pages and Netlify
+
+https://vincianenahimana.github.io/todolist-React/
+
+https://vinci-todolist.netlify.app/
