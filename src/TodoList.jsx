@@ -84,7 +84,7 @@ export default function TodoList() {
                 <button className="btn btn-danger mt-2" 
                         onClick={()=>deleteAllTaskDone()}
                         disabled={!doneTasks}>
-                        Delete All
+                        Delete All done
                 </button>
                 <div className="mt-4 text-white fst-italic">
     {undoneTodos} {undoneTodos === 1 ? "todo" : "todos"} left
