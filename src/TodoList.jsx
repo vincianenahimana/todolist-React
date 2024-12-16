@@ -23,13 +23,14 @@ export default function TodoList() {
     function handleSubmit(event) {
         event.preventDefault();
         let task = event.target.task.value;
+        let category = event.target.category.value;
 
         if (!task) {
             alert('Enter a new task');
             return;
         }
 
-        setTodos([...todos, { content: task, done: false }]);
+        setTodos([...todos, { content: task, done: false, category:category }]);
         event.target.reset();
     }
 
@@ -53,18 +54,18 @@ export default function TodoList() {
         <div className="container my-5">
             <div className="todolist mx-auto rounded border p-4">
                 <TodoHeader />
-
                 <TodoForm onSubmit={handleSubmit} />
-
-                {todos.map((todo, index) => (
-                    <TodoItems
-                        key={index}
-                        todo={todo}
-                        onStatusChange={() => changeTaskStatus(index)}
-                        onDelete={() => todo.done && deleteTask(index)}
-                    />
-                ))}
-
+                <div className="row">
+                    {todos.map((todo, index) => (
+                        <div className="col-12 col-md-12 col-lg-12 mb-3" key={index}>
+                            <TodoItems
+                                todo={todo}
+                                onStatusChange={() => changeTaskStatus(index)}
+                                onDelete={() => todo.done && deleteTask(index)}
+                            />
+                        </div>
+                    ))}
+                </div>
                 <TodoFooter
                     undoneCount={undoneTodos}
                     hasDoneTasks={doneTasks}
