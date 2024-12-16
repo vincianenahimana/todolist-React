@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import './TodoList.css';
+import { TodoHeader } from './TodoHeader';
+import { TodoForm } from './TodoForm';
+import { TodoItems } from './TodoItems';
+import { TodoFooter } from './TodoFooter';
 
 export default function TodoList() {
     function getLocalStoredTodos() {
@@ -12,14 +16,12 @@ export default function TodoList() {
     const undoneTodos = todos.filter(todo => !todo.done).length;
     const doneTasks = todos.some(todo => todo.done);
 
-
     useEffect(() => {
         localStorage.setItem("todos", JSON.stringify(todos));
     }, [todos]);
 
     function handleSubmit(event) {
         event.preventDefault();
-
         let task = event.target.task.value;
 
         if (!task) {
@@ -28,7 +30,6 @@ export default function TodoList() {
         }
 
         setTodos([...todos, { content: task, done: false }]);
-
         event.target.reset();
     }
 
@@ -47,50 +48,29 @@ export default function TodoList() {
         setTodos(incompleteTasks);
         localStorage.setItem("todos", JSON.stringify(incompleteTasks));
     }
+
     return (
         <div className="container my-5">
             <div className="todolist mx-auto rounded border p-4">
-                <h2 className="text-white text-center mb-5">My TodoList</h2>
+                <TodoHeader />
 
-                <form className="d-flex" onSubmit={handleSubmit}>
-                    <input className="form-control me-2" placeholder="Type a new todo" name="task" />
-                    <button className="btn btn-primary me-2" type="submit">Add</button>
-                    
-                </form>
+                <TodoForm onSubmit={handleSubmit} />
 
-                {todos.map((todo, index) => {
-                    return (
-                        <div key={index} className="rounded mt-4 p-2 d-flex"
-                            style={{ backgroundColor: todo.done ? "#79ff4d" : "gray" }}>
-                            <div className="me-auto">{todo.content}</div>
-                            <div>
-                                <i
-                                    className={"h5 me-2 " + (todo.done ? "bi bi-check-square" : "bi bi-square")}
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => changeTaskStatus(index)}
-                                ></i>
-                                <i
-                                    className="h5 bi bi-trash3-fill"
-                                    style={{
-                                        cursor: todo.done ? "pointer" : "not-allowed",
-                                        color: todo.done ? "red" : "lightgray",
-                                    }}
-                                    onClick={() => todo.done && deleteTask(index)}
-                                ></i>
-                            </div>
-                        </div>
-                    );
-                })}
-                <button className="btn btn-danger mt-2" 
-                        onClick={()=>deleteAllTaskDone()}
-                        disabled={!doneTasks}>
-                        Delete All done
-                </button>
-                <div className="mt-4 text-white fst-italic">
-    {undoneTodos} {undoneTodos === 1 ? "todo" : "todos"} left
-</div>
+                {todos.map((todo, index) => (
+                    <TodoItems
+                        key={index}
+                        todo={todo}
+                        onStatusChange={() => changeTaskStatus(index)}
+                        onDelete={() => todo.done && deleteTask(index)}
+                    />
+                ))}
+
+                <TodoFooter
+                    undoneCount={undoneTodos}
+                    hasDoneTasks={doneTasks}
+                    onDeleteAllDone={deleteAllTaskDone}
+                />
             </div>
-            
         </div>
     );
 }
